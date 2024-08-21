@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->integer('balance')->default(3000); // Saldo ficticio inicial
             $table->rememberToken();
             $table->timestamps();
         });

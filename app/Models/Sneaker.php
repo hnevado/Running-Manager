@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Sneaker extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'runner_id',
+        'brand',
+        'model',
+        'max_kilometers',
+        'current_kilometers',
+    ];
+
 }

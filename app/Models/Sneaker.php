@@ -17,4 +17,10 @@ class Sneaker extends Model
         'current_kilometers',
     ];
 
+    //Cada par de zapatillas (Sneaker) es usado por un solo Runner.
+    public function runner()
+    {
+        return $this->belongsTo(Runner::class);
+    }
+
 }

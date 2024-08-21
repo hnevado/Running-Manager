@@ -45,4 +45,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /* Un User puede tener varios Runners, así como participar 
+    en varias Races a través de esos Runners.
+    */
+
+    //Un usuario puede crear y gestionar múltiples corredores,
+    public function runners()
+    {
+        return $this->hasMany(Runner::class);
+    }
+
+    //Un User participa en muchas Races a través de sus Runners
+    public function races()
+    {
+        return $this->hasManyThrough(Race::class, Runner::class);
+    }
+
 }

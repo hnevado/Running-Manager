@@ -27,4 +27,32 @@ class Runner extends Model
         'injury_risk',
     ];
 
+    /* 
+      Un Runner pertenece a un User, tiene muchos Workouts, participa en muchas Races, y tiene una o más Sneakers
+    */
+
+    //Cada Runner pertenece a un único User.
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    //Un Runner tiene muchos Workouts.
+    public function workouts()
+    {
+        return $this->hasMany(Workout::class);
+    }
+
+    //Un Runner puede tener varias zapatillas (Sneakers)
+    public function sneakers()
+    {
+        return $this->hasMany(Sneaker::class);
+    }
+
+    //Un Runner puede participar en varias carreras (Races)
+    public function races()
+    {
+        return $this->hasMany(Race::class);
+    }
+
 }

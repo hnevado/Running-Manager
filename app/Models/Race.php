@@ -15,4 +15,15 @@ class Race extends Model
         'result',
         'time'
     ];
+
+    //Una Race representa la participación de un Runner en una carrera específica.
+    public function runner()
+    {
+        return $this->belongsTo(Runner::class);
+    }
+
+    public function calendar()
+    {
+        return $this->belongsTo(Calendar::class);
+    }
 }

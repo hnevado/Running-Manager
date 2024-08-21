@@ -18,4 +18,14 @@ class Calendar extends Model
         'weather'
     ];
 
+    /*
+     Un evento de Calendar puede tener múltiples participaciones (Races). Es decir, 
+     un evento del calendario puede incluir la participación de varios corredores.
+     */
+
+    public function races()
+    {
+        return $this->hasMany(Race::class);
+    }
+
 }

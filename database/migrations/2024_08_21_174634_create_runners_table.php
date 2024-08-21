@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('category')->default('Amateur'); // Amateur, Profesional, Elite, etc.
             $table->string('sex')->default('man'); // Man, Woman
             $table->string('nationality')->default('Spain'); 
-
+            $table->string('profile_image')->nullable(); //profile_image' => $faker->imageUrl(640, 480, 'people', true, 'Runner')
             // Stats dinámicos
             $table->integer('speed')->default(50); // Velocidad: 0-100
             $table->integer('endurance')->default(50); // Resistencia: 0-100

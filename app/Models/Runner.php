@@ -16,6 +16,7 @@ class Runner extends Model
         'weight',
         'height',
         'category',
+        'profile_image',
         'speed',
         'endurance',
         'form',

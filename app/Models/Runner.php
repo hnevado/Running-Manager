@@ -56,4 +56,33 @@ class Runner extends Model
         return $this->hasMany(Race::class);
     }
 
+    public function getMediaAttribute()
+    {
+        $numericStats = [
+            $this->speed,
+            $this->endurance,
+            $this->form,
+            $this->mental,
+            $this->vo2max,
+        ];
+
+        $categorialStats = [
+            'A' => 100,
+            'B' => 75,
+            'C' => 50,
+            'D' => 25,
+        ];
+
+        $categoryStats = [
+            $categorialStats[$this->nutrition_discipline],
+            $categorialStats[$this->rest_discipline],
+            $categorialStats[$this->injury_risk],
+        ];
+
+        $allStats = array_merge($numericStats, $categoryStats);
+        $average = array_sum($allStats) / count($allStats);
+
+        return round($average, 2); // Devolvemos la media redondeada a dos decimales
+    }
+
 }

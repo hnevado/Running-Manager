@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('runners', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
             $table->string('name');
@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('sex')->default('man'); // Man, Woman
             $table->string('nationality')->default('Spain'); 
             $table->string('profile_image')->nullable(); //profile_image' => $faker->imageUrl(640, 480, 'people', true, 'Runner')
+            $table->integer('price');
             // Stats dinámicos
             $table->integer('speed')->default(50); // Velocidad: 0-100
             $table->integer('endurance')->default(50); // Resistencia: 0-100

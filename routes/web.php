@@ -9,12 +9,7 @@ Route::get('/', function () {
 });
 
 Route::get('/',[DashboardController::class,'home'])->middleware(['auth', 'verified'])->name('dashboard');
-
-/*
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-*/
+Route::get('/runners-recruitment/{runner}',[DashboardController::class,'runnersRecruitment'])->middleware(['auth', 'verified'])->name('runners-recruitment');
 
 
 Route::middleware('auth')->group(function () {

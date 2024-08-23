@@ -12,4 +12,11 @@ class DashboardController extends Controller
         $runners = Runner::latest()->orderBy('id','DESC')->paginate();
         return view('dashboard', ['runners' => $runners]);
     }
+
+    function runnersRecruitment(Runner $runner)
+    {
+
+        return view('runners-recruitment', ['runner' => $runner]);
+
+    }
 }

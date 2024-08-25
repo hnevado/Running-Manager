@@ -1,6 +1,6 @@
 @extends('dashboard/app')
 
-@section('pageTitle', 'Runner Detail')
+@section('pageTitle', 'Detalles corredor')
 
 @section('content')
 <div class="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">

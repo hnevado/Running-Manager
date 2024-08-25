@@ -26,6 +26,8 @@ class Runner extends Model
         'rest_discipline',
         'vo2max',
         'injury_risk',
+        'is_injury',
+        'end_injury'
     ];
 
     /* 

@@ -73,6 +73,10 @@ class RunnerFactory extends Factory
 
             // Precio calculado
             'price' => $price,
+
+            //Por defecto, ninguno está lesionado
+            'is_injury' => 0,
+            'end_injury' => NULL
         ];
     }
 }

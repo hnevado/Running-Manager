@@ -4,3 +4,6 @@
         <li><strong>{{ ucfirst($key) }}:</strong> {{ $value }}</li>
     @endforeach
 </ul>
+
+<p>Age: {{ $runner->age }}</p>
+<p>Speed: {{ $runner->speed }}</p>

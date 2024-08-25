@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->timestamps();
+            
             $table->string('name');
             $table->integer('age'); //Cada año +1
             $table->decimal('weight', 3, 1); // 3 dígitos en total, 1 para decimal. Ejemplo 75.2
@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('nationality')->default('Spain'); 
             $table->string('profile_image')->nullable(); //profile_image' => $faker->imageUrl(640, 480, 'people', true, 'Runner')
             $table->integer('price');
+
             // Stats dinámicos
             $table->integer('speed')->default(50); // Velocidad: 0-100
             $table->integer('endurance')->default(50); // Resistencia: 0-100
@@ -40,6 +41,10 @@ return new class extends Migration
             $table->integer('vo2max')->default(50); // Capacidad aeróbica: 30 - 85 hombres / 30-70 mujeres
             $table->enum('injury_risk', ['A', 'B', 'C', 'D'])->default('B'); // Riesgo de lesión. Si haces muchas sesiones de fortalecimiento, core y prevención, puede cambiar.
             
+            $table->boolean('is_injury'); // ¿Está lesionado actualmente?
+            $table->date('end_injury')->nullable(); // ¿Cuándo termina su lesión?
+
+            $table->timestamps();
         });
     }
 

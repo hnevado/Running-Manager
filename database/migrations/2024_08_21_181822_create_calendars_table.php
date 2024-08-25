@@ -16,9 +16,15 @@ return new class extends Migration
             $table->string('race_name');
             $table->date('race_date');
             $table->integer('entry_fee'); // Precio de inscripción
-            $table->decimal('distance', 5, 2); // Distancia en kilómetros
+            $table->decimal('distance', 5, 3); // Distancia en kilómetros
             $table->integer('difficulty'); // Dificultad 1-10
+            $table->boolean('is_important')->default(0); //Si es una carrera importante, los premios serán mayores y habrá más participación
             $table->enum('weather', ['Lluvia', 'Calor', 'Calor extremo','Frío', 'Viento'])->nullable(); // El tiempo que hará en la carrera
+            $table->integer('winner_reward'); // Premio al ganador y ganador
+            $table->integer('second_reward'); // Premio al segundo y segunda clasificado/a
+            $table->integer('third_reward'); // Premio al tercer y tercera clasificado/a
+            $table->integer('top_ten_reward'); //Premio por entrar del 4º al 10º 
+            $table->boolean('is_closed')->default(0); //Por defecto las inscripciones no están cerradas
             $table->timestamps();
         });
     }

@@ -16,10 +16,14 @@ class DatabaseSeeder extends Seeder
     {
         
         Runner::factory(100)->create();
+        $this->call(CalendarSeeder::class);
 
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+
+
     }
 }

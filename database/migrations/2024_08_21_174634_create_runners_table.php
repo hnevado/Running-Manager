@@ -41,7 +41,7 @@ return new class extends Migration
             $table->integer('vo2max')->default(50); // Capacidad aeróbica: 30 - 85 hombres / 30-70 mujeres
             $table->enum('injury_risk', ['A', 'B', 'C', 'D'])->default('B'); // Riesgo de lesión. Si haces muchas sesiones de fortalecimiento, core y prevención, puede cambiar.
             
-            $table->boolean('is_injury'); // ¿Está lesionado actualmente?
+            $table->boolean('is_injury')->default(0); // ¿Está lesionado actualmente?
             $table->date('end_injury')->nullable(); // ¿Cuándo termina su lesión?
 
             $table->timestamps();

@@ -15,7 +15,12 @@ class Calendar extends Model
         'entry_fee',
         'distance',
         'difficulty',
-        'weather'
+        'is_important',
+        'weather',
+        'winner_reward',
+        'second_reward',
+        'third_reward',
+        'top_ten_reward'
     ];
 
     /*

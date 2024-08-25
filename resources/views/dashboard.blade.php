@@ -1,21 +1,9 @@
-<x-app-layout>
+@extends('dashboard/app')
 
-    <div>
-    
-    <div x-data="{ sidebarOpen: false }" class="flex h-screen bg-gray-200">
-        <div :class="sidebarOpen ? 'block' : 'hidden'" @click="sidebarOpen = false" class="fixed inset-0 z-20 transition-opacity bg-black opacity-50 lg:hidden"></div>
-    
-        @include('dashboard/navigation')
-       
-        <div class="flex flex-col flex-1 overflow-hidden">
-            @include('dashboard/header')
-            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
-                <div class="container px-6 py-8 mx-auto">
-                    <h3 class="text-3xl font-medium text-gray-700">Dashboard</h3>
-    
-                    <div class="mt-4">
-                        <div class="flex flex-wrap -mx-6">
-                            <div class="w-full px-6 sm:w-1/2 xl:w-1/3">
+@section('pageTitle', 'Dashboard')
+
+@section('stats')
+<div class="w-full px-6 sm:w-1/2 xl:w-1/3">
                                 <div class="flex items-center px-5 py-6 bg-white rounded-md shadow-sm">
                                     <div class="p-3 bg-indigo-600 bg-opacity-75 rounded-full">
                                         <svg class="w-8 h-8 text-white" viewBox="0 0 28 30" fill="none"
@@ -91,17 +79,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-    
-                    <div class="mt-8"></div>
-    
-                    @include('dashboard/listado_runners')
+@endsection
 
-                </div>
-            </main>
-        </div>
-    </div>
-</div>
-
-</x-app-layout>
+@section('content')
+    @include('dashboard/listado_runners')
+@endsection

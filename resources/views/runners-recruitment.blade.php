@@ -1,9 +1,16 @@
-<h1>Runner Details</h1>
-<ul>
-    @foreach($runner->getAttributes() as $key => $value)
-        <li><strong>{{ ucfirst($key) }}:</strong> {{ $value }}</li>
-    @endforeach
-</ul>
+@extends('dashboard/app')
 
-<p>Age: {{ $runner->age }}</p>
-<p>Speed: {{ $runner->speed }}</p>
+@section('pageTitle', 'Runner Detail')
+
+@section('stats')
+    <!-- aquí irán las estadísticas runner -->
+@endsection
+
+@section('content')
+    <h1>Detalles del Runner</h1>
+    <ul>
+        @foreach($runner->getAttributes() as $key => $value)
+            <li><strong>{{ ucfirst($key) }}:</strong> {{ $value }}</li>
+        @endforeach
+    </ul>
+@endsection

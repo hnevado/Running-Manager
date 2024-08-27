@@ -55,7 +55,7 @@
                 <div>
                     <h4 class="font-semibold text-gray-700">VO2 Max</h4>
                     <div class="w-full bg-gray-200 rounded-full h-4">
-                        <div title="{{ $runner->vo2max }}%" class="bg-purple-500 h-4 rounded-l-full" style="width: {{ $runner->vo2max }}%;"></div>
+                        <div title="{{ $runner->vo2max }}" class="bg-purple-500 h-4 rounded-l-full" style="width: {{ $runner->vo2max }}%;"></div>
                     </div>
                 </div>
             </div>
@@ -81,33 +81,33 @@
                     </span>
                 </div>
             </div>
+
+            @if (is_null($runner->user))
+            <div class="mt-8">
+              <form name="contratacion_runner" method="POST" action="{{route('storeRunner',$runner)}}">
+                    @csrf
+                    @method('PUT')
+                    <x-primary-button class="bg-black-500">
+                         {{ __('Contratar') }}
+                    </x-primary-button>
+                </form>
+            </div>
+            @endif 
+            
+            @if(session('success'))
+                <div class="mt-4 bg-green-500 text-white p-2 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="mt-4 bg-red-500 text-white p-2 rounded">
+                    {{ session('error') }}
+                </div>
+            @endif
+
         </div>
     </div>
 </div>
 
-
-<!-- otra prueba -->
-
-<!--
-<div class="flex flex-col space-y-4">
-    <div>
-        <h4 class="font-semibold text-gray-700">Nutrition Discipline</h4>
-        <span class="inline-block px-3 py-1 text-sm font-semibold text-white bg-{{ $runner->nutrition_discipline == 'A' ? 'green' : ($runner->nutrition_discipline == 'B' ? 'yellow' : 'red') }}-500 rounded">
-            {{ $runner->nutrition_discipline }}
-        </span>
-    </div>
-    <div>
-        <h4 class="font-semibold text-gray-700">Rest Discipline</h4>
-        <span class="inline-block px-3 py-1 text-sm font-semibold text-white bg-{{ $runner->nutrition_discipline == 'A' ? 'green' : ($runner->nutrition_discipline == 'B' ? 'yellow' : 'red') }}-500 rounded">
-            {{ $runner->rest_discipline }}
-        </span>
-    </div>
-    <div>
-        <h4 class="font-semibold text-gray-700">Injury Risk</h4>
-        <span class="inline-block px-3 py-1 text-sm font-semibold text-white bg-{{ $runner->injury_risk == 'A' ? 'green' : ($runner->injury_risk == 'B' ? 'yellow' : 'red') }}-500 rounded">
-            {{ $runner->injury_risk }}
-        </span>
-    </div>
-</div>    
--->
 @endsection

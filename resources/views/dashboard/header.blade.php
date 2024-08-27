@@ -8,7 +8,7 @@
                     </button>
                 </div>
     
-                <div class="flex items-center">
+                <div class="flex items-center">Saldo: {{ number_format(Auth::user()->balance, 2, ",",".") }}€
                     @include('dashboard/notifications')
                     @include ('dashboard/dropdown')
                 </div>

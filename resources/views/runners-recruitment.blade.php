@@ -22,7 +22,7 @@
                 </div>
                 <div class="md:text-right">
                     <h3 class="text-2xl font-semibold text-gray-700">Precio</h3>
-                    <p class="text-xl text-blue-500 font-bold">{{ number_format($runner->price, 0, ',', '.') }} €</p>
+                    <p class="text-xl text-blue-500 font-bold {{ $runner->price > Auth::user()->balance ? 'text-red-500' : 'text-green-500' }}">{{ number_format($runner->price, 0, ',', '.') }} €</p>
                 </div>
             </div>
 
@@ -93,7 +93,7 @@
                 </form>
             </div>
             @endif 
-            
+
             @if(session('success'))
                 <div class="mt-4 bg-green-500 text-white p-2 rounded">
                     {{ session('success') }}

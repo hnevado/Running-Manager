@@ -6,22 +6,22 @@
                     <tr>
                         <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                             <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'name', 'sort_direction' => request('sort_direction') === 'asc' ? 'desc' : 'asc']) }}">
-                                Nombre
+                                Nombre &#8593;&#8595;
                             </a>
                         </th>
                         <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                             <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'media', 'sort_direction' => request('sort_direction') === 'asc' ? 'desc' : 'asc']) }}">
-                                Media
+                                Media &#8593;&#8595;
                             </a>
                         </th>
                         <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                             <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'price', 'sort_direction' => request('sort_direction') === 'asc' ? 'desc' : 'asc']) }}">
-                                Precio
+                                Precio &#8593;&#8595;
                             </a>
                         </th>
                         <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                             <a href="{{ request()->fullUrlWithQuery(['sort_by' => 'age', 'sort_direction' => request('sort_direction') === 'asc' ? 'desc' : 'asc']) }}">
-                                Edad
+                                Edad &#8593;&#8595;
                             </a>
                         </th>
                         <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>

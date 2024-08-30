@@ -11,27 +11,25 @@ class DashboardController extends Controller
 {
     public function home(Request $request)
     {
+
         // Inicializamos la consulta de runners
         $query = Runner::query();
 
         // Ordenación dinámica según la solicitud
-        if ($request->has('sort_by') && $request->has('sort_direction')) {
-            $query->orderBy($request->input('sort_by'), $request->input('sort_direction'));
-        } else {
-            // Ordenación predeterminada si no hay parámetros de ordenación en la solicitud
-            $query->orderBy('id', 'ASC');
-        }
-
-        // Paginamos los resultados
-        $runners = $query->paginate();
-
+        $sortBy = $request->input('sort_by', 'id'); // Campo de ordenación por defecto es 'id'
+        $sortDirection = $request->input('sort_direction', 'asc'); // Dirección por defecto es 'asc'
+        
+        $query->orderBy($sortBy, $sortDirection);
+        
+        // Paginamos los resultados y agregamos los parámetros de ordenación a la URL
+        $runners = $query->paginate()->appends([
+            'sort_by' => $sortBy,
+            'sort_direction' => $sortDirection,
+        ]);
+        
         // Pasamos los runners a la vista dashboard con un include para la lista de runners
         return view('dashboard', ['runners' => $runners]);
-
-        /*
-        $runners = Runner::latest()->orderBy('id','ASC')->paginate();
-        return view('dashboard', ['runners' => $runners]);
-        */
+       
     }
 
     public function runnersRecruitment(Runner $runner)

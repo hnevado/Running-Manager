@@ -73,7 +73,7 @@
 
             <!-- Paginación -->
             <div class="mt-4 mb-4">
-                {{ $runners->links() }}
+            {{ $runners->appends(request()->query())->links() }}
             </div>
         </div>
     </div>

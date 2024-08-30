@@ -11,8 +11,8 @@ class Sneaker extends Model
 
     protected $fillable = [
         'runner_id',
-        'brand',
         'model',
+        'description',
         'max_kilometers',
         'current_kilometers',
     ];

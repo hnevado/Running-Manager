@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Runner;
 use App\Models\User;
+use App\Models\Race;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function home(Request $request)
     {
+        $user = Auth::user();
+       //Listado de runners a contratar
 
         // Inicializamos la consulta de runners
         $query = Runner::query();
@@ -27,8 +31,24 @@ class DashboardController extends Controller
             'sort_direction' => $sortDirection,
         ]);
         
-        // Pasamos los runners a la vista dashboard con un include para la lista de runners
-        return view('dashboard', ['runners' => $runners]);
+
+        //Estadísticas 
+
+        $numberRunners = Runner::where('user_id',$user->id)->count();
+        $injuryRunners = Runner::where('user_id',$user->id)->where('is_injury', 1)->count();
+
+        // Obtener la próxima carrera
+        $nextRace = Race::join('calendars', 'races.calendar_id', '=', 'calendars.id')
+        ->where('calendars.race_date', '>=', Carbon::today())
+        ->where('races.runner_id', $user->id)
+        ->orderBy('calendars.race_date', 'asc')
+        ->select('races.*', 'calendars.race_date')
+        ->first();
+
+        $nextRaceDate = $nextRace ? $nextRace->calendar->race_date : 'Sin carreras';
+
+        // Pasamos los runners y estadísticas a la vista dashboard 
+        return view('dashboard', ['runners' => $runners, 'numberRunners' => $numberRunners, 'injuryRunners' => $injuryRunners, 'nextRaceDate' => $nextRaceDate]);
        
     }
 

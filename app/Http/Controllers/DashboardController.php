@@ -12,27 +12,11 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public function home(Request $request)
+    public function home()
     {
         $user = Auth::user();
-       //Listado de runners a contratar
 
-        // Inicializamos la consulta de runners
-        $query = Runner::query();
-
-        // Ordenación dinámica según la solicitud
-        $sortBy = $request->input('sort_by', 'id'); // Campo de ordenación por defecto es 'id'
-        $sortDirection = $request->input('sort_direction', 'asc'); // Dirección por defecto es 'asc'
-        
-        $query->orderBy($sortBy, $sortDirection);
-        
-        // Paginamos los resultados y agregamos los parámetros de ordenación a la URL
-        $runners = $query->paginate()->appends([
-            'sort_by' => $sortBy,
-            'sort_direction' => $sortDirection,
-        ]);
-        
-
+        $runners = Runner::where('user_id',$user->id)->get();
         //Estadísticas 
 
         $numberRunners = Runner::where('user_id',$user->id)->count();
@@ -139,5 +123,26 @@ class DashboardController extends Controller
         return redirect()->back()->with('error', 'Ya estás inscrito en esta carrera.');
 
 
+    }
+
+    public function showRunners(Request $request)
+    {
+
+        // Inicializamos la consulta de runners
+        $query = Runner::query();
+
+        // Ordenación dinámica según la solicitud
+        $sortBy = $request->input('sort_by', 'id'); // Campo de ordenación por defecto es 'id'
+        $sortDirection = $request->input('sort_direction', 'asc'); // Dirección por defecto es 'asc'
+        
+        $query->orderBy($sortBy, $sortDirection);
+        
+        // Paginamos los resultados y agregamos los parámetros de ordenación a la URL
+        $runners = $query->paginate()->appends([
+            'sort_by' => $sortBy,
+            'sort_direction' => $sortDirection,
+        ]);
+
+        return view('runners',['runners' => $runners]);
     }
 }

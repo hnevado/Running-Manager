@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Runner;
 use App\Models\User;
 use App\Models\Race;
+use App\Models\Calendar;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -77,5 +78,66 @@ class DashboardController extends Controller
 
             return back()->with('error', 'No tienes suficiente saldo para contratar a este runner. Tu saldo es de '.$user->balance." euros");
         }
+
+    }
+
+    public function showCalendar()
+    {
+
+        $userId = Auth::user()->id;
+
+        // Obtengo los runners del usuario autenticado
+        $runners = auth()->user()->runners;
+
+        // Próximas 30 carreras con sus inscripciones
+        $calendar = Calendar::where('race_date', '>=', Carbon::today())
+            ->orderBy('race_date', 'asc')
+            ->with('races') // Cargar todas las inscripciones relacionadas con la carrera
+            ->take(30)
+            ->get();
+
+        return view('calendar',['calendar' => $calendar, 'runners' => $runners]);
+
+    }
+
+    public function runnerInscription(Request $request, Calendar $calendar)
+    {
+
+        $user = Auth::user();
+
+        // Verificamos que el runner pertenece al usuario
+        Runner::where('id', $request->runner_id)->where('user_id', $user->id)->firstOrFail();
+        
+        // Verificamos si el usuario ya está inscrito
+        $alreadyRegistered = Race::where('runner_id', $request->runner_id)->where('calendar_id', $calendar->id)->exists();
+
+        if ($calendar->is_closed)
+          return redirect()->back()->with('error', 'La carrera '.$calendar->race_name.' ya no admite más inscripciones.');
+
+        if (!$alreadyRegistered) {
+
+            $balance = $user->balance - $calendar->entry_fee;
+
+            if ($balance >= 0) {
+
+                // Actualizo el balance del usuario
+                $user->update(['balance' => $balance]);
+
+                //Guardo su inscripción
+                Race::create([
+                    'runner_id' => $request->runner_id,
+                    'calendar_id' => $calendar->id,
+                ]);
+
+                return redirect()->back()->with('success', 'Te has inscrito con éxito a la carrera '.$calendar->race_name.'.');
+           }
+
+           return redirect()->back()->with('error', 'No tienes suficiente saldo para participar en la carrera '.$calendar->race_name.'.');
+
+        }
+
+        return redirect()->back()->with('error', 'Ya estás inscrito en esta carrera.');
+
+
     }
 }

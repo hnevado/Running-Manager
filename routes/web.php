@@ -12,7 +12,7 @@ Route::get('/',[DashboardController::class,'home'])->middleware(['auth', 'verifi
 Route::get('/runners-recruitment/{runner}',[DashboardController::class,'runnersRecruitment'])->middleware(['auth', 'verified'])->name('runners-recruitment');
 Route::get('/calendar',[DashboardController::class,'showCalendar'])->middleware(['auth', 'verified'])->name('showCalendar');
 Route::get('/runners',[DashboardController::class,'showRunners'])->middleware(['auth', 'verified'])->name('showRunners');
-
+Route::get('/sneakers',[DashboardController::class,'showSneakers'])->middleware(['auth', 'verified'])->name('showSneakers');
 
 Route::post('/runner-inscription/{calendar}', [DashboardController::class, 'runnerInscription'])->name('runnerInscription');
 Route::put('/storerunner/{runner}',[DashboardController::class,'storeRunner'])->middleware(['auth', 'verified'])->name('storeRunner');

@@ -45,7 +45,7 @@
                                 {{$race->entry_fee}} €
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                {{$race->distance}} km
+                                {{$race->distance}} m
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 {{$race->difficulty}}/10

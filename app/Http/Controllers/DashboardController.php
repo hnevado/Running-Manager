@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Runner;
 use App\Models\User;
+use App\Models\Sneaker;
 use App\Models\Race;
 use App\Models\Calendar;
 use Illuminate\Support\Facades\Auth;
@@ -144,5 +145,18 @@ class DashboardController extends Controller
         ]);
 
         return view('runners',['runners' => $runners]);
+    }
+
+    public function showSneakers()
+    {
+
+        $runners_ids = auth()->user()->runners->pluck('id');
+        
+        // Obtengo los sneakers del usuario autenticado
+
+        $sneakers = Sneaker::whereIn('runner_id',$runners_ids)->with('runner')->get();
+
+        return view('sneakers',['sneakers' => $sneakers]);
+
     }
 }

@@ -58,6 +58,13 @@ class Runner extends Model
         return $this->hasMany(Race::class);
     }
 
+    // Relación para obtener todos los entrenamientos previos (logs)
+    public function workoutLogs()
+    {
+        return $this->hasMany(Workout::class)
+            ->orderBy('created_at', 'desc');
+    }
+    
     public function getMediaAttribute()
     {
         $numericStats = [

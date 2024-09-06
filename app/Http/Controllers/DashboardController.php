@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Runner;
 use App\Models\User;
+use App\Models\Workout;
 use App\Models\Sneaker;
 use App\Models\Race;
 use App\Models\Calendar;
@@ -159,4 +160,63 @@ class DashboardController extends Controller
         return view('sneakers',['sneakers' => $sneakers]);
 
     }
+
+    public function showWorkout()
+    {
+        $user = auth()->user();
+        $runners = $user->runners;
+
+        // Verificamos si hay entrenamientos activos
+        $activeWorkout = Workout::whereIn('runner_id', $runners->pluck('id'))
+            ->where('end_workout', '>=', now())
+            ->with('runner')
+            ->first(); // Solo queremos el primer entrenamiento activo
+
+        // Obtenemos los logs de entrenamientos previos
+        $previousWorkouts = Workout::whereIn('runner_id', $runners->pluck('id'))
+        ->where('end_workout', '<', Carbon::now())
+        ->with('runner')
+        ->orderBy('end_workout', 'desc')
+        ->get();
+ 
+        return view('workout', ['runners' => $runners, 'activeWorkout' => $activeWorkout, 'previousWorkouts' => $previousWorkouts]);
+    }
+
+    public function assignWorkout(Request $request)
+    {
+        $validated = $request->validate([
+            'runner_id' => 'required|exists:runners,id',
+            'type' => 'required|in:Rodaje,Series cortas,Series largas,Sesión de fuerza,Ejercicios de fortalecimiento y core',
+            'intensity' => 'required|integer|min:1|max:10',
+            'distance' => 'nullable|integer',
+        ]);
+
+        // Comprobar si ya hay un entrenamiento activo
+        $activeWorkout = Workout::where('runner_id', $validated['runner_id'])
+            ->where('end_workout', '>=', now())
+            ->first();
+
+        if ($activeWorkout) {
+            return back()->withErrors('El corredor ya tiene un entrenamiento activo.');
+        }
+
+        // Calculamos la duración
+        $duration = $validated['type'] === 'Ejercicios de fortalecimiento y core' ? 60 : ($validated['distance'] * 6);
+
+        // Establecemos la fecha fin del entrenamiento
+        $endWorkout = now()->addMinutes($duration);
+
+        // Creamos el entrenamiento
+        Workout::create([
+            'runner_id' => $validated['runner_id'],
+            'type' => $validated['type'],
+            'intensity' => $validated['intensity'],
+            'distance' => $validated['distance'],
+            'end_workout' => $endWorkout,
+            'log' => "Entrenamiento de {$validated['type']} con intensidad {$validated['intensity']}",
+        ]);
+
+        return redirect()->route('showWorkout')->with('success', 'Entrenamiento asignado correctamente.');
+    }
+
 }

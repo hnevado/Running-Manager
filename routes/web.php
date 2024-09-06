@@ -13,8 +13,11 @@ Route::get('/runners-recruitment/{runner}',[DashboardController::class,'runnersR
 Route::get('/calendar',[DashboardController::class,'showCalendar'])->middleware(['auth', 'verified'])->name('showCalendar');
 Route::get('/runners',[DashboardController::class,'showRunners'])->middleware(['auth', 'verified'])->name('showRunners');
 Route::get('/sneakers',[DashboardController::class,'showSneakers'])->middleware(['auth', 'verified'])->name('showSneakers');
+Route::get('/workout',[DashboardController::class,'showWorkout'])->middleware(['auth', 'verified'])->name('showWorkout');
 
 Route::post('/runner-inscription/{calendar}', [DashboardController::class, 'runnerInscription'])->name('runnerInscription');
+Route::post('/assignWorkout', [DashboardController::class, 'assignWorkout'])->name('assignWorkout');
+
 Route::put('/storerunner/{runner}',[DashboardController::class,'storeRunner'])->middleware(['auth', 'verified'])->name('storeRunner');
 
 Route::middleware('auth')->group(function () {

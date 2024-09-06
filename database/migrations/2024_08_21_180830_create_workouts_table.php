@@ -15,19 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('runner_id');
             $table->foreign('runner_id')->references('id')->on('runners')->onUpdate('cascade')->onDelete('cascade');
-            $table->enum('type', ['Rodaje', 'Series cortas', 'Series largas', 'Sesión de fuerza', 'Sesión de core', 'Estiramientos'])->default('Rodaje');
-            $table->integer('duration')->nullable(); // Duración en minutos
+            $table->enum('type', ['Rodaje', 'Series cortas', 'Series largas', 'Sesión de fuerza', 'Ejercicios de fortalecimiento y core'])->default('Rodaje');
             $table->integer('distance')->nullable(); // Distancia en kilómetros
-            $table->integer('number_series')->nullable();
             $table->integer('intensity'); // 1-10 para reflejar la dureza del entrenamiento
-
-            // Efecto en stats
-            $table->integer('effect_on_speed')->default(0);
-            $table->integer('effect_on_endurance')->default(0);
-            $table->integer('effect_on_form')->default(0);
-            $table->integer('effect_on_mental')->default(0);
-            $table->integer('effect_on_tired')->default(0);
-            
+            $table->dateTime('end_workout')->nullable(); //A qué hora termina el entrenamiento
+            $table->text('log')->nullable(); // Log del entrenamiento
             $table->timestamps();
         });
     }

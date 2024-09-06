@@ -157,6 +157,6 @@
         </div>
       </div>
     @empty
-        <p>¡Aún no has contratado ningún runner! <a href="{{route('runners')}}">Contratar runner</a></p>
+        <p>¡Aún no has contratado ningún runner! <a href="{{route('showRunners')}}">Contratar runner</a></p>
     @endforelse
 @endsection

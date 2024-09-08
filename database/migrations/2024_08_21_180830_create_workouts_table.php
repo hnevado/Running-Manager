@@ -9,6 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
+    /*
+    Ejecutar cron en servidor 
+    * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+    
+    php artisan update:runner-stats (sólo para actualizar los stats de los runners después de un entrenamiento)
+    php artisan schedule:run ejecutar todos
+    */
     public function up(): void
     {
         Schema::create('workouts', function (Blueprint $table) {
@@ -20,6 +28,7 @@ return new class extends Migration
             $table->integer('intensity'); // 1-10 para reflejar la dureza del entrenamiento
             $table->dateTime('end_workout')->nullable(); //A qué hora termina el entrenamiento
             $table->text('log')->nullable(); // Log del entrenamiento
+            $table->boolean('processed')->default(false);
             $table->timestamps();
         });
     }

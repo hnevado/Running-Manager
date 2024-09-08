@@ -16,7 +16,8 @@ class Workout extends Model
         'distance',
         'intensity',
         'end_workout',
-        'log'
+        'log',
+        'processed'
     ];
 
     // Método para calcular el aumento de cansancio basado en la intensidad

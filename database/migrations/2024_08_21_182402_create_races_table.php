@@ -22,6 +22,8 @@ return new class extends Migration
 
             $table->string('result')->nullable(); // Resultado de la carrera
             $table->string('time')->nullable(); // Tiempo final en la carrera
+            
+            $table->json('progress_log')->nullable(); // Log de progreso por kilómetros
 
             $table->timestamps();
         });

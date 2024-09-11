@@ -21,7 +21,15 @@
 
                 @if ($race->progress_log)
                     @foreach (json_decode($race->progress_log, true) as $logEntry)
-                        <p>Kilómetro {{ $logEntry['km'] }}: Posición {{ $logEntry['position'] }}, a {{ $logEntry['time_gap'] }} segundos del corredor delante.</p>
+                        <p>Kilómetro {{ $logEntry['km'] }}:</p>
+                        
+                        <!-- Si es el primer corredor, no mostramos gap -->
+                        @if ($logEntry['position'] == 1)
+                            <p>Está en primera posición.</p>
+                        @else
+                            <!-- Para los demás corredores, mostramos el gap con el corredor anterior -->
+                            <p>Está en la posición {{ $logEntry['position'] }}, a {{ $logEntry['time_gap'] }} segundos del corredor delante.</p>
+                        @endif
                     @endforeach
                 @else
                     <p>No hay actualizaciones disponibles aún.</p>

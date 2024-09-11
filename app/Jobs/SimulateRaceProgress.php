@@ -59,10 +59,8 @@ class SimulateRaceProgress implements ShouldQueue
                 $runner = $race->runner;
 
                 //Asignamos el tiempo de progreso con base en el clima y dificultad
-                //Por defecto en recorrer un kilómetro tarda entre 3 minutos y 3 minutos 30 por kilómetro
-                //A este tiempo se le suma, la dificultad de la carrera y las condiciones meteorológicas
 
-                $timeProgress = rand(180, 210) / ($difficulty * 0.5);
+                $timeProgress = rand(1, 10) / ($difficulty * 0.5);
 
                 if ($weather === 'Lluvia' || $weather === 'Calor extremo') {
                     $timeProgress *= 1.5; // Penalización por mal clima

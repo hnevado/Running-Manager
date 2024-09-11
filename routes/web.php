@@ -15,6 +15,9 @@ Route::get('/runners',[DashboardController::class,'showRunners'])->middleware(['
 Route::get('/sneakers',[DashboardController::class,'showSneakers'])->middleware(['auth', 'verified'])->name('showSneakers');
 Route::get('/workout',[DashboardController::class,'showWorkout'])->middleware(['auth', 'verified'])->name('showWorkout');
 
+Route::get('/start-race/{calendarId}', [DashboardController::class, 'startRaceSimulation'])->name('startRaceSimulation');
+Route::get('/race-progress/{calendarId}', [DashboardController::class, 'showRaceProgress'])->name('showRaceProgress');
+
 Route::post('/runner-inscription/{calendar}', [DashboardController::class, 'runnerInscription'])->name('runnerInscription');
 Route::post('/assignWorkout', [DashboardController::class, 'assignWorkout'])->name('assignWorkout');
 

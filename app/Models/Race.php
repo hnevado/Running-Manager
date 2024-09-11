@@ -13,7 +13,8 @@ class Race extends Model
         'runner_id',
         'calendar_id',
         'result',
-        'time'
+        'time',
+        'progress_log'
     ];
 
     //Una Race representa la participación de un Runner en una carrera específica.

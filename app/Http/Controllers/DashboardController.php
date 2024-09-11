@@ -11,6 +11,7 @@ use App\Models\Race;
 use App\Models\Calendar;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Jobs\SimulateRaceProgress;
 
 class DashboardController extends Controller
 {
@@ -33,9 +34,10 @@ class DashboardController extends Controller
         ->first();
 
         $nextRaceDate = $nextRace ? $nextRace->calendar->race_date : 'Sin carreras';
+        $calendarId = $nextRace ? $nextRace->calendar->id : 0;
 
         // Pasamos los runners y estadísticas a la vista dashboard 
-        return view('dashboard', ['runners' => $runners, 'numberRunners' => $numberRunners, 'injuryRunners' => $injuryRunners, 'nextRaceDate' => $nextRaceDate]);
+        return view('dashboard', ['runners' => $runners, 'numberRunners' => $numberRunners, 'injuryRunners' => $injuryRunners, 'nextRaceDate' => $nextRaceDate, 'calendarId' => $calendarId]);
        
     }
 
@@ -217,6 +219,33 @@ class DashboardController extends Controller
         ]);
 
         return redirect()->route('showWorkout')->with('success', 'Entrenamiento asignado correctamente.');
+    }
+
+    public function startRaceSimulation($calendarId)
+    {
+        $calendar = Calendar::findOrFail($calendarId);
+
+        // Despachar el job SimulateRaceProgress a la cola
+        SimulateRaceProgress::dispatch($calendar);
+
+        return redirect()->route('showRaceProgress', ['calendarId' => $calendarId])
+                        ->with('status', 'La simulación de la carrera ha comenzado.');
+    }
+
+    public function showRaceProgress($calendarId)
+    {
+        // Obtener la carrera (calendar) y los corredores inscritos
+        $calendar = Calendar::findOrFail($calendarId);
+        $runners = Race::where('calendar_id', $calendarId)->with('runner')->get();
+        
+        // Obtener el log de progreso almacenado
+        //$progressLog = $calendar->progress_log;
+
+        // Pasar los datos a la vista
+        return view('race_progress', [
+            'calendar' => $calendar,
+            'runners' => $runners
+        ]);
     }
 
 }

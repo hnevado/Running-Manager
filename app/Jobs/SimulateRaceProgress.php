@@ -39,95 +39,71 @@ class SimulateRaceProgress implements ShouldQueue
         $totalDistance = $calendar->distance;
         $weather = $calendar->weather;
         $difficulty = $calendar->difficulty;
-        $currentPositions = [];
-        $timeGaps = [];
-
-        // Inicializamos las posiciones de los corredores de manera aleatoria
         $currentPositions = $runners->pluck('runner.id')->shuffle()->values()->toArray();
         $timeGaps = array_fill_keys($currentPositions, 0); // Inicializamos los tiempos de gap en 0 para todos
+        $totalTimes = array_fill_keys($currentPositions, 0); // Inicializamos el tiempo total de cada corredor
 
         // Simulación por kilómetro
         for ($km = 1; $km <= $totalDistance; $km++) {
             echo "Kilómetro $km: \n";
 
-            // Variables para almacenar la nueva posición y tiempos
-            $newPositions = $currentPositions;  // Partimos de las posiciones actuales
-            $leaderTime = 0;
-            //$leaderId = null;
+            // Variables para almacenar las posiciones y tiempos
+            $newPositions = $currentPositions;
+            $timesForThisKilometer = [];
 
+            // Calcular el tiempo de progreso para cada corredor
             foreach ($runners as $index => $race) {
                 $runner = $race->runner;
 
-                //Asignamos el tiempo de progreso con base en el clima y dificultad
-
-                $timeProgress = rand(1, 10) / ($difficulty * 0.5);
-
+                // Asignamos el tiempo de progreso con base en el clima y dificultad
+                $timeProgress = rand(180, 220) / ($difficulty * 0.5);
                 if ($weather === 'Lluvia' || $weather === 'Calor extremo') {
                     $timeProgress *= 1.5; // Penalización por mal clima
                 }
 
-                // Si es el primer corredor, es el líder
-                if ($index === 0) {
-                    $leaderTime = $timeProgress;
-                    //$leaderId = $runner->id;
-                    $newPositions[$index] = $runner->id; // El líder mantiene la posición
-                    $timeGaps[$runner->id] = 0; // El líder no tiene nadie delante
-                } else {
-                    // Asignar nuevo tiempo al corredor basado en el líder
-                    $previousRunnerId = $currentPositions[$index - 1]; // Corredor anterior
-                    //$previousGap = $timeGaps[$previousRunnerId] ?? 0;
-
-                    $timeGap = $leaderTime + rand(1, 5) / 10; // Incremento gradual
-                    $timeGaps[$runner->id] = $timeGap;
-
-                    // Decidir si el corredor adelanta o mantiene su posición
-                    if (rand(0, 1) === 1 && $index > 1) { // Aleatoriamente permitimos adelantar
-                        // Intercambiar posiciones con el corredor anterior
-                        $newPositions[$index] = $newPositions[$index - 1];
-                        $newPositions[$index - 1] = $runner->id;
-                    } else {
-                        // Mantiene su posición
-                        $newPositions[$index] = $runner->id;
-                    }
-                }
+                // Sumamos el tiempo de progreso acumulado
+                $totalTimes[$runner->id] += $timeProgress;
+                $timesForThisKilometer[$runner->id] = $totalTimes[$runner->id]; // Guardamos el tiempo para este kilómetro
             }
 
-            // Actualizamos las posiciones y tiempos de cada corredor
-            foreach ($runners as $index => $race) {
-                $runner = $race->runner;
-                $newPosition = array_search($runner->id, $newPositions) + 1; // Obtener la nueva posición
-                $timeGap = $timeGaps[$runner->id];
+            // Ordenamos a los corredores según su tiempo acumulado (el más rápido va primero)
+            asort($timesForThisKilometer);
+            $sortedRunners = array_keys($timesForThisKilometer); // IDs de corredores ordenados por su tiempo acumulado
 
-                $progress = [
-                    'km' => $km,
-                    'position' => $newPosition,
-                    'time_gap' => $timeGap,
-                ];
+            // Actualizamos las posiciones y calculamos los gaps
+            foreach ($sortedRunners as $position => $runnerId) {
+                $runner = $runners->firstWhere('runner.id', $runnerId)->runner;
 
-                // Actualizamos el log de progreso
-                $currentLog = json_decode($race->progress_log, true) ?? [];
-                $currentLog[] = $progress;
-                $race->progress_log = json_encode($currentLog);
-                $race->save();
-
-                // Mostrar el progreso del corredor
-                if ($newPosition === 1) {
+                // El líder es el primer corredor en la lista ordenada
+                if ($position === 0) {
+                    $timeGaps[$runnerId] = 0; // El líder no tiene nadie delante
                     echo "El corredor {$runner->name} está en primera posición en el kilómetro $km.\n";
                 } else {
-                    // Mostrar gap con el corredor anterior
-                    $previousRunnerId = $newPositions[$newPosition - 2] ?? null;
-                    if ($previousRunnerId) {
-                        $timeGapWithLeader = $timeGaps[$previousRunnerId] ?? 0;
-                        echo "El corredor {$runner->name} está en la posición $newPosition en el kilómetro $km, a {$timeGapWithLeader} segundos del corredor delante.\n";
-                    }
+                    // El gap es la diferencia de tiempo acumulado con respecto al corredor delante
+                    $previousRunnerId = $sortedRunners[$position - 1];
+                    $timeGaps[$runnerId] = $totalTimes[$runnerId] - $totalTimes[$previousRunnerId];
+
+                    echo "El corredor {$runner->name} está en la posición " . ($position + 1) . " en el kilómetro $km, a {$timeGaps[$runnerId]} segundos del corredor delante.\n";
                 }
+
+                // Actualizamos el log de progreso
+                $progress = [
+                    'km' => $km,
+                    'position' => $position + 1,
+                    'time_gap' => $timeGaps[$runnerId],
+                ];
+
+                $currentLog = json_decode($runners->firstWhere('runner.id', $runnerId)->progress_log, true) ?? [];
+                $currentLog[] = $progress;
+                $runners->firstWhere('runner.id', $runnerId)->progress_log = json_encode($currentLog);
+                $runners->firstWhere('runner.id', $runnerId)->save();
             }
 
-            // Actualizamos las posiciones actuales para el próximo kilómetro
-            $currentPositions = $newPositions;
+            // Actualizamos las posiciones actuales con el nuevo orden
+            $currentPositions = $sortedRunners;
         }
 
         echo "La carrera ha finalizado.\n";
-   }
+  }
 
 }

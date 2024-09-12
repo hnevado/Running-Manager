@@ -55,8 +55,27 @@ class SimulateRaceProgress implements ShouldQueue
             foreach ($runners as $index => $race) {
                 $runner = $race->runner;
 
+
+                // Calculamos la media de los stats del corredor
+                $runnerStats = [
+                    $runner->speed,
+                    $runner->endurance,
+                    $runner->form,
+                    $runner->mental,
+                    $runner->vo2max,
+                ];
+                $averageStats = array_sum($runnerStats) / count($runnerStats);
+
+
                 // Asignamos el tiempo de progreso con base en el clima y dificultad
-                $timeProgress = rand(180, 220) / ($difficulty * 0.5);
+                //$timeProgress = rand(180, 220) / ($difficulty * 0.5);
+                $timeProgress = 340 - (180 * ($averageStats / 100));
+            
+                //Parte aleatoria de ritmo por kilómetro, si no sería todo muy lineal si solo lo calculamos en base a sus stats
+                //y nunca variaría nada.
+
+                $timeProgress = $timeProgress + rand(-5, 5); 
+                echo "Ritmo por kilómetro de ".$runner->name." es de ".$timeProgress."\n";
                 if ($weather === 'Lluvia' || $weather === 'Calor extremo') {
                     $timeProgress *= 1.5; // Penalización por mal clima
                 }

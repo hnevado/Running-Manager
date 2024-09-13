@@ -43,6 +43,14 @@ class SimulateRaceProgress implements ShouldQueue
         $timeGaps = array_fill_keys($currentPositions, 0); // Inicializamos los tiempos de gap en 0 para todos
         $totalTimes = array_fill_keys($currentPositions, 0); // Inicializamos el tiempo total de cada corredor
 
+        //Penalización de tiempo por dificultad de carrera
+        if ($difficulty > 8)
+          $difficultyPenalty = rand(5, 10);
+        else if ($difficulty > 5)
+          $difficultyPenalty = rand(1, 5);
+        else 
+          $difficultyPenalty = rand(0, 1); //Si es menor de 5, la penalización de tiempo es muy poca
+
         // Simulación por kilómetro
         for ($km = 1; $km <= $totalDistance; $km++) {
             echo "Kilómetro $km: \n";
@@ -81,10 +89,8 @@ class SimulateRaceProgress implements ShouldQueue
                 }
 
                 //Penalización de tiempo por dificultad de carrera
-                if ($difficulty > 8)
-                  $timeProgress += $timeProgress += rand(5, 10);
-                if ($difficulty > 5)
-                  $timeProgress += $timeProgress += rand(1, 5);
+                $timeProgress += $difficultyPenalty;
+ 
                 
                 //Parte aleatoria de ritmo por kilómetro, si no sería todo muy lineal si solo lo calculamos en base a sus stats
                 //y nunca variaría nada.

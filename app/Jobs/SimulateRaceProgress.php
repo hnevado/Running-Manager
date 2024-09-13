@@ -71,6 +71,21 @@ class SimulateRaceProgress implements ShouldQueue
                 //$timeProgress = rand(180, 220) / ($difficulty * 0.5);
                 $timeProgress = 340 - (180 * ($averageStats / 100));
             
+                // Penalización por fatiga
+                if ($runner->tired > 85) {
+                    $timeProgress += rand(5, 10); // Penalización de 5 a 10 segundos por fatiga alta
+                } else if ($runner->tired > 50) {
+                    $timeProgress += rand(3, 5); // Penalización de 3 a 5 segundos por fatiga media
+                } else if ($runner->tired > 25) {
+                    $timeProgress += rand(1, 3); // Penalización de 1 a 3 segundos por fatiga baja
+                }
+
+                //Penalización de tiempo por dificultad de carrera
+                if ($difficulty > 8)
+                  $timeProgress += $timeProgress += rand(5, 10);
+                if ($difficulty > 5)
+                  $timeProgress += $timeProgress += rand(1, 5);
+                
                 //Parte aleatoria de ritmo por kilómetro, si no sería todo muy lineal si solo lo calculamos en base a sus stats
                 //y nunca variaría nada.
 
